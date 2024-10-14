@@ -220,17 +220,16 @@
 
     <script>
         function downloadPDF() {
-            const element = document.body;
+            const element = document.getElementById('business-card-content'); // Capture only the business card section
             html2canvas(element, {
-                allowTaint: true,
-                useCORS: true,
-                scale: 2
+                scale: 2, // Increase resolution
+                useCORS: true // Enable cross-origin for external images
             }).then(function (canvas) {
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'pt', 'a4');
-                const imgWidth = 595.28;
-                const pageHeight = 841.89;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                const pdf = new jsPDF('p', 'mm', 'a4'); // Create PDF in portrait, millimeters, A4 format
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Calculate proportional height
                 let heightLeft = imgHeight;
                 let position = 0;
 
