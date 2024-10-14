@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MK Digital Business Card - Eyouel Mebratu</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Athena:wght@400&display=swap'); /* Importing Athena font */
+        @import url('https://fonts.googleapis.com/css2?family=Athena:wght@400&display=swap');
 
         body {
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
-        /* Header styling */
         .header {
             background-color: #3944BC;
             color: white;
@@ -48,7 +47,6 @@
             text-decoration: underline;
         }
 
-        /* Top half styling */
         .top-half {
             background-color: #3944BC;
             color: white;
@@ -74,9 +72,7 @@
             margin: 0;
         }
 
-        /* Button styling */
-        .save-contact-btn,
-        .download-btn {
+        .save-contact-btn, .download-btn {
             background-color: #28a745;
             color: white;
             padding: 10px 20px;
@@ -88,13 +84,11 @@
             cursor: pointer;
         }
 
-        .save-contact-btn:hover,
-        .download-btn:hover {
+        .save-contact-btn:hover, .download-btn:hover {
             background-color: #218838;
             opacity: 0.7;
         }
 
-        /* Bottom half styling */
         .bottom-half {
             background-color: white;
             height: 60vh;
@@ -124,10 +118,7 @@
             text-decoration: underline;
         }
 
-        .bottom-half .telegram, 
-        .bottom-half .whatsapp, 
-        .bottom-half .tiktok, 
-        .bottom-half .snapchat {
+        .bottom-half .telegram, .whatsapp, .tiktok, .snapchat {
             width: 27.6px;
             height: 27.6px;
         }
@@ -141,14 +132,13 @@
             text-decoration: none;
         }
 
-        /* Phone number without underline */
         .phone-number {
             color: white;
             font-size: 20px;
             font-weight: bold;
             margin: 10px 0;
             cursor: pointer;
-            text-decoration: none; /* No underline */
+            text-decoration: none;
         }
 
         .email-link img {
@@ -159,11 +149,10 @@
             border: none;
         }
 
-        /* Button container and alignment */
         .button-container {
             display: flex;
             justify-content: center;
-            margin-top: -10px; /* Moves buttons up */
+            margin-top: -10px;
         }
     </style>
 </head>
@@ -171,7 +160,7 @@
 
     <!-- Header with company logo and name -->
     <div class="header">
-        <img src="company-logo.png" alt="MK Logo"> <!-- Replace with your logo file -->
+        <img src="company-logo.png" alt="MK Logo">
         <div class="company-name">
             <a href="#">MK <span class="digital-business-card">Digital Business Card</span></a>
         </div>
@@ -182,7 +171,7 @@
         <img src="your-picture.jpg" alt="Your Picture">
         <h1>Eyouel Mebratu</h1>
 
-        <!-- Phone number link (no underline, opens dialer) -->
+        <!-- Phone number link -->
         <a href="tel:+251963148584" class="phone-number">Phone: +251963148584</a>
 
         <!-- Email link -->
@@ -192,9 +181,7 @@
 
         <!-- Button Container -->
         <div class="button-container">
-            <!-- Button to Save to Contacts (opens vCard) -->
             <a href="data:text/vcard;charset=utf-8,BEGIN:VCARD%0AVERSION:3.0%0AFN:Eyouel Mebratu%0AEMAIL:eyouelmebratuinbox@gmail.com%0ATEL:+251963148584%0AURL:https://a444h7.github.io/Mk-7/%0AEND:VCARD" class="save-contact-btn" download="Eyouel_Mebratu.vcf">Save to Contact</a>
-            <!-- Download button to generate PDF -->
             <button class="download-btn" onclick="downloadPDF()">Download</button>
         </div>
     </div>
@@ -227,60 +214,40 @@
         </a>
     </div>
 
-    <!-- Include html2canvas and jsPDF from CDN -->
+    <!-- Include html2canvas and jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 
     <script>
         function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('portrait', 'pt', 'a4');
-
-            // Capture the full page as an image
-            html2canvas(document.body, {
-                scale: 2, // Increase resolution for better quality
-            }).then((canvas) => {
+            const element = document.body;
+            html2canvas(element, {
+                allowTaint: true,
+                useCORS: true,
+                scale: 2
+            }).then(function (canvas) {
                 const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 595.28; // PDF width in points (A4 size)
-                const pageHeight = 841.89; // PDF height in points (A4 size)
+                const pdf = new jsPDF('p', 'pt', 'a4');
+                const imgWidth = 595.28;
+                const pageHeight = 841.89;
                 const imgHeight = (canvas.height * imgWidth) / canvas.width;
                 let heightLeft = imgHeight;
-
                 let position = 0;
 
-                // Add the image (content) to the PDF, splitting over multiple pages if needed
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
 
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
-                    doc.addPage();
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
 
-                // Ensure the links and phone number are still functional
-                // Add clickable phone number
-                doc.setTextColor(0, 0, 255);
-                doc.textWithLink('Phone: +251963148584', 30, 150, { url: 'tel:+251963148584' });
-                
-                // Add clickable email
-                doc.textWithLink('Email: eyouelmebratuinbox@gmail.com', 30, 180, { url: 'mailto:eyouelmebratuinbox@gmail.com' });
-
-                // Add social media links
-                doc.textWithLink('Telegram', 30, 210, { url: 'https://t.me/Eyouel_Mebratu_inbox' });
-                doc.textWithLink('Facebook', 30, 240, { url: 'https://www.facebook.com/eyouelmebratuinbox' });
-                doc.textWithLink('Instagram', 30, 270, { url: 'https://www.instagram.com/eyouelmebratu_inbox?igsh=b2g4MXJsZ3c5' });
-                doc.textWithLink('WhatsApp', 30, 300, { url: 'https://wa.me/251963148584' });
-                doc.textWithLink('Snapchat', 30, 330, { url: 'https://www.snapchat.com/add/eyouelmebrau?share_id=lF1RQN9M4UA&locale=en-GB' });
-                doc.textWithLink('X', 30, 360, { url: 'https://x.com/EyouelMebratu?t=aYLD5KWjGSb0QIzb9AACsA&s=09' });
-                doc.textWithLink('YouTube', 30, 390, { url: 'https://www.youtube.com/@EyouelMebratuInbox' });
-                doc.textWithLink('TikTok', 30, 420, { url: 'https://www.tiktok.com/@eyouel.mebratu.inbox?_t=8qErFXrH3P4&_r=1' });
-
-                // Save the PDF file
-                doc.save('MK_Digital_Business_Card.pdf');
+                pdf.save('MK_Digital_Business_Card.pdf');
             });
         }
     </script>
+
 </body>
 </html>
