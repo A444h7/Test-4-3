@@ -237,13 +237,6 @@
             const doc = new jsPDF('portrait', 'pt', 'a4');
 
             // Capture the full page as an image
-            html2canvas(document
-    <script>
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('portrait', 'pt', 'a4');
-
-            // Capture the full page as an image
             html2canvas(document.body, {
                 scale: 2, // Increase resolution for better quality
             }).then((canvas) => {
